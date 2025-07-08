@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extrator de NFSe - Guarulhos</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 0; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { max-width: 600px; width: 90%; margin: auto; padding: 2.5em; background-color: #fff; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center; }
+        h1 { color: #333; }
+        p { color: #666; line-height: 1.6; }
+        form { margin-top: 2em; }
+        input[type=file] { display: block; width: 100%; margin-bottom: 1.5em; border: 2px dashed #007bff; padding: 1.5em; border-radius: 5px; background-color: #f0f8ff; cursor: pointer; }
+        input[type=submit] { background-color: #007bff; color: white; font-size: 1em; font-weight: bold; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
+        input[type=submit]:hover { background-color: #0056b3; }
+        .footer { margin-top: 2em; font-size: 0.8em; color: #999; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Extrator de Dados de NFSe (PDF)</h1>
+        <p>Faça o upload do arquivo PDF da nota fiscal de serviço (tomador) da Prefeitura de Guarulhos para gerar o arquivo XML correspondente.</p>
+        <form method=post enctype=multipart/form-data>
+            <input type=file name=file accept=".pdf" required>
+            <input type=submit value="Gerar XML">
+        </form>
+        <div class="footer">
+            <p>Desenvolvido para otimizar processos fiscais.</p>
+        </div>
+    </div>
+</body>
+</html>
