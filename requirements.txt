@@ -1,2 +1,7 @@
 Flask
-pdfplumber
+transformers
+torch
+Pillow
+pdf2image
+pytesseract
+pdgplumber

@@ -1,51 +1,57 @@
-# Extrator de NFSe (PDF para XML) - Prefeitura de Guarulhos
+# Extrator de NFSe com Inteligência Artificial
 
-Este é um projeto web simples, construído com Flask (Python), para extrair dados de Notas Fiscais de Serviço (NFS-e) em formato PDF, da Prefeitura de Guarulhos, e gerar um arquivo XML para download.
+Este projeto utiliza uma interface web e um modelo de Inteligência Artificial (LayoutLM) para extrair dados de qualquer Nota Fiscal de Serviço (NFS-e) em formato PDF e gerar um arquivo XML com as informações.
 
-## Como Rodar o Projeto
+## Funcionalidades
+- Interface web simples para upload de arquivos.
+- Pré-visualização do PDF enviado diretamente no navegador.
+- Extração de dados flexível e universal usando um modelo de IA (Document Question Answering).
+- Geração de arquivo XML padronizado para download.
 
-### Pré-requisitos
-- Python 3.8 ou superior
-- VS Code (ou qualquer outro editor de texto/IDE)
-- Um terminal (o terminal integrado do VS Code é perfeito)
+## Pré-requisitos
+- Python 3.8 ou superior.
+- **Para usuários Windows:** Você **precisa** ter os utilitários externos `Poppler` e `Tesseract-OCR` instalados. O código está configurado para procurá-los nos caminhos padrão (`C:\poppler\...` e `C:\Program Files\Tesseract-OCR`). Certifique-se de que os caminhos no topo do arquivo `extrator.py` correspondem à sua instalação.
 
-### 1. Preparar o Ambiente
-Abra o terminal no VS Code (`Ctrl+` ou `Terminal > Novo Terminal`) e execute os seguintes comandos na pasta raiz do projeto:
+## Instalação e Setup
 
-```bash
-# 1. Criar um ambiente virtual para isolar as dependências
-python3 -m venv venv
+1.  **Clone ou baixe os arquivos do projeto.**
 
-# 2. Ativar o ambiente virtual
-# No Windows:
-venv\Scripts\activate
-# No macOS/Linux:
-source venv/bin/activate
+2.  **Abra um terminal** na pasta raiz do projeto.
 
-# 3. Instalar as bibliotecas necessárias do arquivo requirements.txt
-pip install -r requirements.txt
-```
+3.  **Crie um ambiente virtual:**
+    ```bash
+    python -m venv venv
+    ```
 
-### 2. Executar a Aplicação
+4.  **Ative o ambiente virtual:**
+    - No Windows (PowerShell):
+      ```powershell
+      .\venv\Scripts\activate
+      ```
+      *(Se encontrar um erro de política de execução, rode `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process` primeiro).*
+    - No macOS/Linux:
+      ```bash
+      source venv/bin/activate
+      ```
 
-Com o ambiente virtual ainda ativado, execute o seguinte comando no terminal:
+5.  **Instale todas as dependências** com um único comando, usando o arquivo `requirements.txt`:
+    ```bash
+    pip install -r requirements.txt
+    ```
+    *(Esta etapa pode demorar, pois fará o download de bibliotecas grandes como PyTorch e Transformers).*
 
-```bash
-flask run
-```
+## Como Executar
 
-Você verá uma saída parecida com esta:
-```
- * Serving Flask app 'app'
- * Running on [http://127.0.0.1:5000](http://127.0.0.1:5000)
-   (Press CTRL+C to quit)
-```
+1.  Com o ambiente virtual ativado, inicie o servidor Flask com o comando robusto:
+    ```bash
+    python -m flask run
+    ```
 
-### 3. Usar a Ferramenta
-Abra seu navegador de internet (Chrome, Firefox, etc.) e acesse o endereço:
-**http://127.0.0.1:5000**
+2.  **Aguarde o download do modelo de IA.** Na primeira vez que você rodar, o programa irá baixar o modelo de IA da internet, o que pode levar vários minutos. Aguarde até que a mensagem `[INFO AI] Modelo de IA carregado com sucesso` apareça no terminal.
 
-Você verá a interface para upload. Selecione um arquivo PDF de uma nota fiscal de Guarulhos e clique em "Gerar XML" para fazer o download do resultado.
+3.  **Acesse a aplicação** no seu navegador pelo endereço: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
-## **AVISO IMPORTANTE**
-A lógica de extração de dados no arquivo `extrator.py` depende MUITO do layout do PDF. Os padrões de busca (expressões regulares) foram criados como exemplos genéricos. **É muito provável que você precise ajustá-los** para que correspondam exatamente ao texto e à estrutura das suas notas fiscais.
+## Considerações Importantes
+- **Desempenho:** A extração com IA é mais lenta que um sistema de regras. O processamento de uma nota pode levar de 5 a 30 segundos, dependendo do seu computador.
+- **Precisão:** A IA é muito flexível, mas não é 100% perfeita. Para layouts muito complexos ou de baixa qualidade, alguns campos podem não ser extraídos corretamente.
+- **Hardware:** O processo exige um uso considerável de CPU e memória RAM.
