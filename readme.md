@@ -1,4 +1,4 @@
-# Extrator de NFSe (PDF para XML) - Prefeitura de Guarulhos
+ve# Extrator de NFSe (PDF para XML) - Prefeitura de Guarulhos
 
 Este é um projeto web simples, construído com Flask (Python), para extrair dados de Notas Fiscais de Serviço (NFS-e) em formato PDF, da Prefeitura de Guarulhos, e gerar um arquivo XML para download.
 

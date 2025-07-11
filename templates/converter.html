@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Pré-visualização de PDF</title>
-  <link rel="stylesheet" href="converter.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='converter.css') }}">
 </head>
 <body>
 
   <header>
-    <img src="icone.PNG" alt="ícone">
+    <img src="{{ url_for('static', filename='icone.PNG') }}" alt="ícone">
   </header>
 
   <div class="container">
@@ -17,6 +17,6 @@
     <button class="convert-btn" onclick="convertToXML()">CONVERTER PARA XML</button>
   </div>
 
-  <script src="converter.js"></script>
+  <script src="{{ url_for('static', filename='converter.js') }}"></script>
 </body>
 </html>

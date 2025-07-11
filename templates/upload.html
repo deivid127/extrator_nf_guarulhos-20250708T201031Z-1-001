@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Automação Fiscal</title>
-  <link rel="stylesheet" href="upload.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='upload.css') }}">
 </head>
 <body>
 
   <header>
-    <img src="icone.PNG" alt="ícone">
+    <img src="{{ url_for('static', filename='icone.PNG') }}" alt="ícone">
     <h1>G-Fical Automação</h1>
     <div></div>
   </header>
@@ -26,6 +26,6 @@
     <button class="continue-btn" onclick="goToNext()">CONTINUAR</button>
   </div>
 
-  <script src="upload.js"></script>
+  <script src="{{ url_for('static', filename='upload.js') }}"></script>
 </body>
 </html>

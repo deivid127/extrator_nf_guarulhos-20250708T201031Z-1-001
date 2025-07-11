@@ -62,8 +62,40 @@ def upload_file():
             return redirect(request.url)
 
     # Para o método GET, apenas renderiza a página de upload.
-    return render_template('index.html')
+    return render_template('upload.html')
 
+@app.route('/converter')
+def converter():
+    return render_template('converter.html')
+
+@app.route('/gerar_xml', methods=['POST'])
+def gerar_xml_route():
+    if 'file' not in request.files:
+        return "Nenhum arquivo enviado!", 400
+
+    file = request.files['file']
+    if file.filename == '' or not file.filename.lower().endswith('.pdf'):
+        return "Arquivo inválido!", 400
+
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(filepath)
+
+    try:
+        dados = extrair_dados_nf(filepath)
+        if dados:
+            xml_content = gerar_xml(dados)
+            numero_nota = dados.get("numero_nota", "sem_numero")
+            return Response(
+                xml_content,
+                mimetype='application/xml',
+                headers={'Content-Disposition': f'attachment;filename=NF_{numero_nota}.xml'}
+            )
+        else:
+            return "Não foi possível extrair dados válidos do PDF.", 400
+    finally:
+        if os.path.exists(filepath):
+            os.remove(filepath)
 
 # Este bloco permite rodar com "python app.py", mas o ideal é usar "flask run"
 if __name__ == '__main__':
