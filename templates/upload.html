@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Automação Fiscal</title>
+  <link rel="stylesheet" href="upload.css">
+</head>
+<body>
+
+  <header>
+    <img src="icone.PNG" alt="ícone">
+    <h1>G-Fical Automação</h1>
+    <div></div>
+  </header>
+
+  <div class="container">
+    <p>Faça o upload do arquivo PDF da nota fiscal de serviço (tomador) para gerar o arquivo XML correspondente.</p>
+    <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
+    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">SELECIONAR ARQUIVOS PDF</button>
+
+    <div class="drag-area" ondrop="handleDrop(event)" ondragover="event.preventDefault()">
+      <p>ARRASTE OS ARQUIVOS AQUI:</p>
+      <ul class="file-list" id="fileList"></ul>
+    </div>
+
+    <button class="continue-btn" onclick="goToNext()">CONTINUAR</button>
+  </div>
+
+  <script src="upload.js"></script>
+</body>
+</html>
