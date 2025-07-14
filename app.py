@@ -89,7 +89,11 @@ def upload_file():
             if os.path.exists(filepath):
                 os.remove(filepath)
 
-    return render_template('index.html')
+    return render_template('upload.html')
+
+@app.route('/converter')
+def converter():
+    return render_template('converter.html')
 
 if __name__ == '__main__':
     app.run()
