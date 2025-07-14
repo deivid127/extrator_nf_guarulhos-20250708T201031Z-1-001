@@ -1,13 +1,15 @@
 # extrator_ai.py
 
 import re
+import json
 from transformers import pipeline
 from pdf2image import convert_from_path
 import pytesseract
+import openai
 
 # --- Configuração dos Programas Externos ---
 try:
-    caminho_tesseract = r"C:\Users\usrlabecon\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
+    caminho_tesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
     pytesseract.pytesseract.tesseract_cmd = caminho_tesseract
 except Exception:
     pass
@@ -23,32 +25,81 @@ except Exception as e:
     QA_PIPELINE = None
     print(f"[ERRO AI] Não foi possível carregar o modelo de IA: {e}")
 
-def extrair_dados_com_ia(caminho_do_pdf):
-    if not QA_PIPELINE:
-        raise RuntimeError("O pipeline de IA não está disponível.")
-    try:
-        imagem_pil = convert_from_path(caminho_do_pdf, poppler_path=CAMINHO_POPPLER, first_page=1, dpi=200)[0]
-        perguntas = {
-            'numero_nota': "Qual é o número da nota fiscal?",
-            'data_emissao': "Qual a data e hora da emissão?",
-            'valor_servicos': "Qual o valor total da nota fiscal?",
-            'codigo_servico': "Qual o código do serviço?",
-        }
-        dados_extraidos = {}
-        for nome_campo, pergunta in perguntas.items():
-            resultado = QA_PIPELINE(image=imagem_pil, question=pergunta)
-            dados_extraidos[nome_campo] = resultado[0]['answer'] if resultado else "N/A"
+PROMPT_TEMPLATE = """
+Você é um assistente especialista em extrair dados estruturados de notas fiscais de serviço (NFS-e) brasileiras.
+Sua tarefa é analisar o texto bruto de uma NFS-e que será fornecido e retornar os dados em um formato JSON limpo.
+O formato de saída JSON deve ser o seguinte:
+{{
+  "numero_nota": "extraia o número da nota",
+  "data_emissao": "extraia a data e hora completas da emissão no formato DD/MM/AAAA HH:MM:SS",
+  "valor_servicos": "extraia o valor total dos serviços como um número com ponto decimal",
+  "codigo_servico": "extraia o código completo e a descrição do serviço",
+  "iss_retido": "extraia o valor do ISS Retido como um número com ponto decimal",
+  "retencoes_federais": "extraia o valor total das retenções federais (PIS, COFINS, IR, CSLL) como um número com ponto decimal"
+}}
+Se um campo específico não for encontrado, o valor no JSON deve ser "N/A".
+Sua resposta deve conter APENAS o objeto JSON, sem nenhum texto adicional.
 
-        # Limpeza e conversão dos dados
-        CAMPOS_NUMERICOS = ['valor_servicos']
-        for campo in CAMPOS_NUMERICOS:
-            valor = dados_extraidos.get(campo, "0")
-            if valor and any(char.isdigit() for char in valor):
-                valor_str = re.sub(r'[^\d,]', '', valor).replace(',', '.')
-                dados_extraidos[campo] = float(valor_str) if valor_str else 0.0
-            else:
-                dados_extraidos[campo] = 0.0
+Aqui está o texto extraído do PDF:
+---
+{texto_do_pdf}
+---
+"""
+
+def extrair_dados_com_ia(caminho_do_pdf):
+    if not openai.api_key:
+        raise ValueError("Chave da API da OpenAI não configurada.")
+    
+    # Esta função agora está dentro do try/except principal
+    try:
+        # Extrai o texto completo do PDF
+        with pdfplumber.open(caminho_do_pdf) as pdf:
+            texto_completo = ""
+            for page in pdf.pages:
+                texto_pagina = page.extract_text()
+                if texto_pagina:
+                    texto_completo += texto_pagina + "\n"
+
+        if not texto_completo.strip():
+            print("[AVISO] PDF não continha texto legível.")
+            return None
+
+        prompt_final = PROMPT_TEMPLATE.format(texto_do_pdf=texto_completo)
+        print("[INFO] Enviando requisição para a API da OpenAI...")
+        
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Você é um assistente especialista em extração de dados JSON."},
+                {"role": "user", "content": prompt_final}
+            ]
+        )
+        
+        resposta_bruta = response.choices[0].message.content
+        print(f"[INFO] Resposta bruta da IA recebida: {resposta_bruta}")
+
+        # --- LÓGICA DE PARSING ROBUSTA ---
+        try:
+            # Tenta converter a resposta diretamente para JSON
+            dados_extraidos = json.loads(resposta_bruta)
+        except json.JSONDecodeError:
+            # Se falhar, é porque a IA não retornou um JSON válido.
+            print("[AVISO] A resposta da IA não era um JSON válido. Extração falhou.")
+            return None # Retorna None, indicando a falha
+        # ------------------------------------
+
+        # Limpeza e conversão dos dados (só executa se o JSON for válido)
+        for key in ['valor_servicos', 'iss_retido', 'retencoes_federais']:
+            valor = dados_extraidos.get(key)
+            if isinstance(valor, str) and valor != "N/A":
+                valor_limpo = re.sub(r'[^\d.]', '', valor.replace(',', '.'))
+                dados_extraidos[key] = float(valor_limpo) if valor_limpo else 0.0
+            elif not isinstance(valor, (int, float)):
+                 dados_extraidos[key] = 0.0
+
         return dados_extraidos
+
     except Exception as e:
-        print(f"ERRO CRÍTICO DURANTE A EXTRAÇÃO COM IA: {e}")
+        # Captura qualquer outro erro (ex: falha na chamada da API)
+        print(f"ERRO CRÍTICO no extrator_ai.py: {e}")
         return None

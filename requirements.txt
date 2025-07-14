@@ -1,7 +1,4 @@
 Flask
-transformers
-torch
-Pillow
-pdf2image
-pytesseract
-pdgplumber
+openai
+python-dotenv
+pdfplumber
