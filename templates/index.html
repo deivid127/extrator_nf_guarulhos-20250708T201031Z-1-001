@@ -3,71 +3,30 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extrator de NFSe com IA</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <title>Extrator de NFSe - Guarulhos</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 2em 0; }
-        .container { max-width: 600px; width: 90%; margin: auto; padding: 2.5em; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 0; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { max-width: 600px; width: 90%; margin: auto; padding: 2.5em; background-color: #fff; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center; }
         h1 { color: #333; }
-        p { color: #666; }
-        #preview-container { margin-top: 2em; }
-        #pdf-preview { border: 1px solid #ddd; max-width: 100%; height: auto; border-radius: 4px; }
-        input[type=file] { display: block; width: calc(100% - 3em); margin: 1.5em auto; border: 2px dashed #ccc; padding: 1.5em; border-radius: 5px; background-color: #fafafa; }
-        input[type=submit] { background-color: #007bff; color: white; font-size: 1.1em; font-weight: bold; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; margin-top: 1em; }
+        p { color: #666; line-height: 1.6; }
+        form { margin-top: 2em; }
+        input[type=file] { display: block; width: 100%; margin-bottom: 1.5em; border: 2px dashed #007bff; padding: 1.5em; border-radius: 5px; background-color: #f0f8ff; cursor: pointer; }
+        input[type=submit] { background-color: #007bff; color: white; font-size: 1em; font-weight: bold; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
         input[type=submit]:hover { background-color: #0056b3; }
-        .flash { padding: 1em; margin-bottom: 1em; border-radius: 5px; background-color: #ffeeba; color: #856404; border: 1px solid #ffdf7e; }
+        .footer { margin-top: 2em; font-size: 0.8em; color: #999; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Extrator de NFSe com Inteligência Artificial</h1>
-        <p>Faça o upload de qualquer Nota Fiscal de Serviço em PDF para extrair os dados.</p>
-        
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <div class="flash">{{ messages[0] }}</div>
-          {% endif %}
-        {% endwith %}
-
+        <h1>Extrator de Dados de NFSe (PDF)</h1>
+        <p>Faça o upload do arquivo PDF da nota fiscal de serviço (tomador) da Prefeitura de Guarulhos para gerar o arquivo XML correspondente.</p>
         <form method=post enctype=multipart/form-data>
-            <input type=file name=file accept=".pdf" required id="pdf-file">
-
-            <div id="preview-container" style="display: none;">
-                <h4>Pré-visualização do Documento:</h4>
-                <canvas id="pdf-preview"></canvas>
-            </div>
-
-            <input type=submit value="Gerar XML com IA">
+            <input type=file name=file accept=".pdf" required>
+            <input type=submit value="Gerar XML">
         </form>
+        <div class="footer">
+            <p>Desenvolvido para otimizar processos fiscais.</p>
+        </div>
     </div>
-
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`;
-        const fileInput = document.getElementById('pdf-file');
-        const previewContainer = document.getElementById('preview-container');
-        const canvas = document.getElementById('pdf-preview');
-        const context = canvas.getContext('2d');
-
-        fileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file && file.type === 'application/pdf') {
-                const fileReader = new FileReader();
-                fileReader.onload = function() {
-                    pdfjsLib.getDocument(new Uint8Array(this.result)).promise.then(function(pdf) {
-                        return pdf.getPage(1);
-                    }).then(function(page) {
-                        const viewport = page.getViewport({ scale: 1.5 });
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        page.render({ canvasContext: context, viewport: viewport });
-                        previewContainer.style.display = 'block';
-                    });
-                };
-                fileReader.readAsArrayBuffer(file);
-            } else {
-                previewContainer.style.display = 'none';
-            }
-        });
-    </script>
 </body>
 </html>

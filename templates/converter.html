@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pré-visualização de PDF</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='converter.css') }}">
+</head>
+<body>
+
+  <header>
+    <img src="{{ url_for('static', filename='icone.PNG') }}" alt="ícone">
+  </header>
+
+  <div class="container">
+    <div class="pdf-preview" id="previewContainer"></div>
+
+    <button class="convert-btn" onclick="convertToXML()">CONVERTER PARA XML</button>
+  </div>
+
+  <script src="{{ url_for('static', filename='converter.js') }}"></script>
+</body>
+</html>
