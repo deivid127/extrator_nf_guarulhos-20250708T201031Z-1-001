@@ -31,7 +31,7 @@ function convertToXML() {
       const formData = new FormData();
       formData.append('file', blob, fileData.name);
 
-      fetch('/gerar_xml', {
+      fetch('/', {
         method: 'POST',
         body: formData
       })
