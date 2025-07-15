@@ -8,7 +8,7 @@
 <body>
 
   <header>
-    <a href="{{ url_for('upload') }}">
+    <a href="{{ url_for('index') }}">
       <img src="{{ url_for('static', filename='icone.PNG') }}" alt="ícone">
     </a>
   </header>
@@ -18,7 +18,7 @@
 
     <button class="convert-btn" onclick="convertToXML()">CONVERTER PARA XML</button>
     <br>
-    <button class="back-btn" onclick="window.location.href='{{ url_for('upload') }}'">VOLTAR</button>
+    <button class="back-btn" onclick="window.location.href='{{ url_for('index') }}'">VOLTAR</button>
   </div>
 
   <script src="{{ url_for('static', filename='converter.js') }}"></script>

@@ -1,4 +1,8 @@
 Flask
+pdfplumber
 openai
 python-dotenv
-pdfplumber
+transformers
+torch
+pdf2image
+pytesseract
