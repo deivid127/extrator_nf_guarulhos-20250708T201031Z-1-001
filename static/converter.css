@@ -45,6 +45,15 @@ header img {
 }
 
 .convert-btn {
+  background-color:#324e67;
+  color: white;
+  padding: 14px 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.back-btn {
   background-color: #333;
   color: white;
   padding: 14px 30px;
@@ -52,6 +61,11 @@ header img {
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
+  margin-top: 20px;
+}
+
+.back-btn:hover {
+  background-color: #555;
 }
 
 .convert-btn:hover {

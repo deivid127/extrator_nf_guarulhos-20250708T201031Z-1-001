@@ -52,3 +52,8 @@ function convertToXML() {
       .catch(err => alert(err.message));
     });
 }
+
+function voltarParaUpload() {
+  // Redireciona para a página upload.html
+  window.location.href = "{{ url_for('upload') }}";
+}
