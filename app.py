@@ -1,5 +1,3 @@
-# app.py
-
 from flask import Flask, request, render_template, Response, flash, url_for
 from werkzeug.utils import secure_filename
 import os
@@ -10,10 +8,8 @@ import io
 import zipfile
 from dotenv import load_dotenv
 
-# Carrega as variáveis de ambiente (sua chave de API)
 load_dotenv()
 
-# Importa as duas funções de extração de seus respectivos arquivos
 from extrator import extrair_com_regras
 from extrator_ai import extrair_dados_com_ia
 
@@ -28,10 +24,8 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 
 def gerar_xml(dados_nf):
-    """Gera um arquivo XML a partir de um dicionário de dados."""
     if not dados_nf: return None
     
-    # Garante que os valores numéricos sejam floats
     for key in ['valor_servicos', 'iss_retido', 'retencoes_federais']:
         if isinstance(dados_nf.get(key), str):
             try:
@@ -67,17 +61,14 @@ def gerar_xml(dados_nf):
     ET.indent(root, space="  ")
     return ET.tostring(root, encoding='unicode', xml_declaration=True)
 
-# Rota principal que serve a página de upload
 @app.route('/')
 def index():
     return render_template('upload.html')
 
-# Rota que serve a página de conversão/preview
 @app.route('/converter')
 def converter_page():
     return render_template('converter.html')
 
-# Nova rota dedicada para processar os arquivos
 @app.route('/processar_notas', methods=['POST'])
 def processar_notas():
     uploaded_files = request.files.getlist('files[]')

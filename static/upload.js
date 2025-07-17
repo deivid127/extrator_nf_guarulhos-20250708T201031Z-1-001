@@ -77,4 +77,3 @@ function goToNext() {
 }
 
 window.addEventListener("DOMContentLoaded", carregarArquivosDaSessao);
-

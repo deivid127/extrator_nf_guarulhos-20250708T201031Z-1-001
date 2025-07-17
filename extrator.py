@@ -1,9 +1,6 @@
-# extrator.py
-
 import re
 import pdfplumber
 
-# --- PERFIL 1: REGRAS PARA NOTA DE GUARULHOS (ANTIGA) ---
 REGRAS_GUARULHOS = {
     'numero_nota': r"NFS-e\s+(\d+)\s+Código de Verificação",
     'data_emissao': r"Data e Hora da Emissão\s+([\d/]+\s*[\d:]+)",
@@ -16,7 +13,6 @@ REGRAS_GUARULHOS = {
 CAMPOS_NUMERICOS = ['valor_servicos', 'iss_retido', 'retencoes_federais']
 
 def extrair_com_regras(caminho_do_pdf):
-    """Extrai dados usando as regras específicas para o layout de Guarulhos."""
     texto_completo = ""
     dados = {}
     try:
@@ -31,7 +27,6 @@ def extrair_com_regras(caminho_do_pdf):
             if match:
                 valor_bruto = " ".join(match.group(1).strip().split())
                 if nome_campo in CAMPOS_NUMERICOS:
-                    # Converte o valor para float
                     valor_limpo = valor_bruto.replace('.', '').replace(',', '.')
                     dados[nome_campo] = float(valor_limpo) if valor_limpo else 0.0
                 else:

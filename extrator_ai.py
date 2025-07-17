@@ -1,5 +1,3 @@
-# extrator_ai.py
-
 import re
 import json
 from transformers import pipeline
@@ -12,16 +10,13 @@ import pdfplumber
 
 load_dotenv()
 
-# --- Configuração dos Programas Externos ---
 try:
     caminho_tesseract = r"C:\Users\usrlabecon\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
     pytesseract.pytesseract.tesseract_cmd = caminho_tesseract
 except Exception:
     pass
 CAMINHO_POPPLER = r"C:\poppler-24.08.0\Library\bin"
-# -----------------------------------------------------------
 
-# Carregamento do modelo de IA
 print("[INFO AI] Carregando modelo de IA de Documentos...")
 try:
     QA_PIPELINE = pipeline("document-question-answering", model="impira/layoutlm-document-qa")
